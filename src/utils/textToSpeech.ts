@@ -31,24 +31,33 @@ export async function speakQuote(text: string, author: string, onEnd?: () => voi
     const fullText = `${text}. By ${author}`;
     currentUtterance = new SpeechSynthesisUtterance(fullText);
 
-    // Configure utterance
-    currentUtterance.rate = 0.95; // Slightly slower for clarity
-    currentUtterance.pitch = 1;
+    // Configure utterance for dramatic, serious tone
+    currentUtterance.rate = 0.75; // Much slower for dramatic effect
+    currentUtterance.pitch = 0.8; // Slightly lower pitch for seriousness
     currentUtterance.volume = 1;
 
     // Get available voices
     const voices = window.speechSynthesis.getVoices();
     console.log(`Available voices: ${voices.length}`);
 
-    // Use the first available English voice
-    const englishVoice = voices.find((v) => v.lang.startsWith("en"));
-    if (englishVoice) {
-      currentUtterance.voice = englishVoice;
-      console.log(`Using voice: ${englishVoice.name}`);
-    } else if (voices.length > 0) {
-      // Fallback to first available voice
-      currentUtterance.voice = voices[0];
-      console.log(`Using fallback voice: ${voices[0].name}`);
+    // Prefer a deeper/more serious English voice
+    let selectedVoice = voices.find((v) => 
+      v.lang.startsWith("en") && (v.name.includes("male") || v.name.includes("deep") || v.name.includes("serious"))
+    );
+    
+    // Fallback to any English voice
+    if (!selectedVoice) {
+      selectedVoice = voices.find((v) => v.lang.startsWith("en"));
+    }
+    
+    // Last resort: use first available voice
+    if (!selectedVoice && voices.length > 0) {
+      selectedVoice = voices[0];
+    }
+
+    if (selectedVoice) {
+      currentUtterance.voice = selectedVoice;
+      console.log(`Using voice: ${selectedVoice.name}`);
     }
 
     // Add error handler
@@ -62,7 +71,7 @@ export async function speakQuote(text: string, author: string, onEnd?: () => voi
     };
 
     // Speak
-    console.log("Starting speech synthesis");
+    console.log("Starting speech synthesis with dramatic tone");
     window.speechSynthesis.speak(currentUtterance);
   } catch (error) {
     console.error("Error in speakQuote:", error);

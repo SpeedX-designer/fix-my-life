@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Zap, ArrowLeft, Clock } from "lucide-react";
 import HeroSection    from "./components/HeroSection";
 import CategoryPicker from "./components/CategoryPicker";
+import AudioToggle    from "./components/AudioToggle";
 import QuoteCard      from "./components/QuoteCard";
 import HistoryPanel   from "./components/HistoryPanel";
 import Toast          from "./components/Toast";
@@ -13,6 +14,7 @@ import {
 } from "./data/quotes";
 
 const HISTORY_KEY = "fml_quote_history_v2";
+const AUDIO_TOGGLE_KEY = "fml_audio_enabled_v1";
 
 function loadHistory(): Quote[] {
   try {
@@ -29,6 +31,18 @@ function saveHistory(history: Quote[]) {
   catch { /* quota exceeded */ }
 }
 
+function loadAudioToggle(): boolean {
+  try {
+    const raw = localStorage.getItem(AUDIO_TOGGLE_KEY);
+    return raw ? JSON.parse(raw) : false;
+  } catch { return false; }
+}
+
+function saveAudioToggle(enabled: boolean) {
+  try { localStorage.setItem(AUDIO_TOGGLE_KEY, JSON.stringify(enabled)); }
+  catch { /* quota exceeded */ }
+}
+
 export default function App() {
   const [category,     setCategory]     = useState<Category>("all");
   const [quote,        setQuote]        = useState<Quote | null>(null);
@@ -37,9 +51,13 @@ export default function App() {
   const [cardKey,      setCardKey]      = useState(0);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMsg,     setToastMsg]     = useState("");
+  const [audioEnabled, setAudioEnabled] = useState(loadAudioToggle);
 
   /* Persist history */
   useEffect(() => { saveHistory(history); }, [history]);
+
+  /* Persist audio toggle */
+  useEffect(() => { saveAudioToggle(audioEnabled); }, [audioEnabled]);
 
   /* Push quote to history with timestamp */
   const pushToHistory = useCallback((q: Quote) => {
@@ -153,6 +171,12 @@ export default function App() {
               </div>
 
               <div className="flex items-center gap-2">
+                {/* Audio Toggle */}
+                <AudioToggle
+                  isEnabled={audioEnabled}
+                  onChange={setAudioEnabled}
+                />
+
                 {/* History */}
                 <button
                   onClick={() => setHistoryOpen(true)}
@@ -195,6 +219,7 @@ export default function App() {
               quote={quote}
               onNew={handleFix}
               onShare={handleShare}
+              audioEnabled={audioEnabled}
             />
 
             {/* Meta line */}
