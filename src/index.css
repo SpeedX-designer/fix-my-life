@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-playfair: 'Playfair Display', serif;
+  --font-inter: 'Inter', sans-serif;
+}
+
+@layer base {
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body, #root {
+    min-height: 100%;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #000000;
+    color: #ffffff;
+    overflow-x: hidden;
+  }
+}
+
+/* ══════════════════════════════════════════
+   AMBIENT BACKGROUND
+══════════════════════════════════════════ */
+.red-ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(255,0,0,0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 15% 85%,  rgba(255,0,0,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 35% 25% at 85% 65%,  rgba(255,0,0,0.04) 0%, transparent 60%);
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px;
+}
+
+/* ══════════════════════════════════════════
+   GLASS CARD
+══════════════════════════════════════════ */
+.glass-card {
+  background: rgba(255,255,255,0.025);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* ══════════════════════════════════════════
+   GLOW UTILITIES
+══════════════════════════════════════════ */
+.text-red-glow {
+  text-shadow: 0 0 24px rgba(255,0,0,0.65), 0 0 70px rgba(255,0,0,0.22);
+}
+
+.border-red-glow {
+  box-shadow:
+    0 0 0 1px rgba(255,0,0,0.45),
+    0 0 22px rgba(255,0,0,0.15),
+    0 0 60px rgba(255,0,0,0.05),
+    inset 0 0 28px rgba(255,0,0,0.03);
+}
+
+.btn-red-glow {
+  box-shadow:
+    0 0 28px rgba(255,0,0,0.55),
+    0 0 70px rgba(255,0,0,0.20),
+    0 4px 32px rgba(0,0,0,0.85);
+}
+.btn-red-glow:hover {
+  box-shadow:
+    0 0 45px rgba(255,0,0,0.75),
+    0 0 110px rgba(255,0,0,0.30),
+    0 8px 45px rgba(0,0,0,0.95);
+}
+
+/* Mode-specific card glows */
+.friendly-card-glow {
+  box-shadow:
+    0 0 0 1px rgba(16,185,129,0.28),
+    0 0 44px rgba(16,185,129,0.10),
+    0 0 80px rgba(16,185,129,0.04);
+}
+.harsh-card-glow {
+  box-shadow:
+    0 0 0 1px rgba(234,88,12,0.30),
+    0 0 44px rgba(234,88,12,0.12),
+    0 0 80px rgba(234,88,12,0.04);
+}
+.savage-card-glow {
+  box-shadow:
+    0 0 0 1px rgba(220,38,38,0.38),
+    0 0 48px rgba(220,38,38,0.15),
+    0 0 90px rgba(220,38,38,0.05);
+}
+
+/* Mode picker glows */
+.friendly-glow {
+  box-shadow:
+    0 0 0 1px rgba(16,185,129,0.55),
+    0 0 28px rgba(16,185,129,0.18),
+    0 0 60px rgba(16,185,129,0.07);
+}
+.harsh-glow {
+  box-shadow:
+    0 0 0 1px rgba(234,88,12,0.55),
+    0 0 28px rgba(234,88,12,0.20),
+    0 0 60px rgba(234,88,12,0.07);
+}
+.savage-glow {
+  box-shadow:
+    0 0 0 1px rgba(220,38,38,0.60),
+    0 0 32px rgba(220,38,38,0.22),
+    0 0 70px rgba(220,38,38,0.08);
+}
+
+/* ══════════════════════════════════════════
+   HR
+══════════════════════════════════════════ */
+.hr-red {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,0,0,0.55), transparent);
+}
+
+/* ══════════════════════════════════════════
+   BUTTON SHIMMER
+══════════════════════════════════════════ */
+@keyframes redShimmer {
+  0%   { background-position: -300% center; }
+  100% { background-position:  300% center; }
+}
+.btn-red-shimmer {
+  background: linear-gradient(
+    90deg,
+    #bb0000 0%, #ff0000 22%, #ff4444 42%,
+    #ff0000 58%, #cc0000 78%, #ff0000 100%
+  );
+  background-size: 300% auto;
+  animation: redShimmer 4s linear infinite;
+}
+
+/* ══════════════════════════════════════════
+   PING PULSE
+══════════════════════════════════════════ */
+@keyframes pingRed {
+  0%   { transform: translate(-50%,-50%) scale(1);   opacity: 0.55; }
+  100% { transform: translate(-50%,-50%) scale(2.4); opacity: 0; }
+}
+.ping-red {
+  animation: pingRed 2.2s cubic-bezier(0,0,0.2,1) infinite;
+}
+
+/* ══════════════════════════════════════════
+   TYPEWRITER CURSOR
+══════════════════════════════════════════ */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.cursor-blink {
+  animation: blink 0.85s step-end infinite;
+}
+
+/* ══════════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════════ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes titleReveal {
+  from { opacity: 0; transform: translateY(40px) skewY(2deg); }
+  to   { opacity: 1; transform: translateY(0)    skewY(0deg); }
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+@keyframes badgeEnter {
+  from { opacity: 0; transform: translateY(-6px) scale(0.88); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+@keyframes modeDotPulse {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%       { transform: scale(1.6); opacity: 0.4; }
+}
+@keyframes slideInBottom {
+  from { transform: translateY(80px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes slideOutBottom {
+  from { transform: translateY(0);    opacity: 1; }
+  to   { transform: translateY(80px); opacity: 0; }
+}
+
+/* Animation classes */
+.anim-title    { animation: titleReveal 0.9s cubic-bezier(0.22,1,0.36,1) both; }
+.anim-fade-0   { animation: fadeInUp   0.7s cubic-bezier(0.22,1,0.36,1) 0.0s  both; }
+.anim-fade-1   { animation: fadeInUp   0.7s cubic-bezier(0.22,1,0.36,1) 0.12s both; }
+.anim-fade-2   { animation: fadeInUp   0.7s cubic-bezier(0.22,1,0.36,1) 0.24s both; }
+.anim-fade-3   { animation: fadeInUp   0.7s cubic-bezier(0.22,1,0.36,1) 0.36s both; }
+.anim-fade-4   { animation: fadeInUp   0.7s cubic-bezier(0.22,1,0.36,1) 0.48s both; }
+.anim-card     { animation: cardReveal 0.65s cubic-bezier(0.22,1,0.36,1) both; }
+.badge-enter   { animation: badgeEnter 0.4s  cubic-bezier(0.34,1.56,0.64,1) both; }
+.mode-dot      { animation: modeDotPulse 1.5s ease-in-out infinite; }
+.toast-enter   { animation: slideInBottom 0.45s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+.toast-exit    { animation: slideOutBottom 0.3s ease-in forwards; }
+
+/* ══════════════════════════════════════════
+   HISTORY PANEL
+══════════════════════════════════════════ */
+@keyframes historyItemIn {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.history-item-enter {
+  animation: historyItemIn 0.35s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+/* ══════════════════════════════════════════
+   SCROLLBAR
+══════════════════════════════════════════ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: rgba(255,0,0,0.6); border-radius: 2px; }
+
+/* History panel scrollbar */
+.scrollbar-history::-webkit-scrollbar { width: 3px; }
+.scrollbar-history::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-history::-webkit-scrollbar-thumb { background: rgba(255,0,0,0.25); border-radius: 2px; }
+.scrollbar-history::-webkit-scrollbar-thumb:hover { background: rgba(255,0,0,0.5); }
