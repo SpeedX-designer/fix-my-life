@@ -61,13 +61,20 @@ export default function QuoteCard({ quote, onNew, onShare }: Props) {
 
   const isTyping = displayed.length < quote.text.length;
 
-  const handlePlayAudio = () => {
+  const handlePlayAudio = async () => {
     if (isPlaying) {
       stopSpeech();
       setIsPlaying(false);
     } else {
-      speakQuote(quote.text, quote.author.name);
-      setIsPlaying(true);
+      try {
+        setIsPlaying(true);
+        await speakQuote(quote.text, quote.author.name, () => {
+          setIsPlaying(false);
+        });
+      } catch (error) {
+        console.error("Failed to play audio:", error);
+        setIsPlaying(false);
+      }
     }
   };
 
