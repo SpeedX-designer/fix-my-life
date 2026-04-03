@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Brain, Heart, Briefcase, Star, Wind, TrendingUp, Leaf, Shuffle,
-  Zap, Copy, RefreshCw, Globe, Calendar,
+  Zap, Copy, RefreshCw, Globe, Calendar, Volume2, Square,
 } from "lucide-react";
 import { Quote, Category } from "../data/quotes";
+import { speakQuote, stopSpeech } from "../utils/textToSpeech";
 
 const CATEGORY_META: Record<Category, { label: string; icon: React.ReactNode; color: string }> = {
   all:           { label: "All Topics",    icon: <Shuffle    size={13} strokeWidth={1.8} />, color: "#ef4444" },
@@ -26,6 +27,7 @@ export default function QuoteCard({ quote, onNew, onShare }: Props) {
   const [displayed,   setDisplayed]   = useState("");
   const [showAuthor,  setShowAuthor]  = useState(false);
   const [showActions, setShowActions] = useState(false);
+  const [isPlaying,   setIsPlaying]   = useState(false);
   const idxRef   = useRef(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -35,6 +37,8 @@ export default function QuoteCard({ quote, onNew, onShare }: Props) {
     setDisplayed("");
     setShowAuthor(false);
     setShowActions(false);
+    setIsPlaying(false);
+    stopSpeech();
     idxRef.current = 0;
     if (timerRef.current) clearTimeout(timerRef.current);
 
@@ -56,6 +60,16 @@ export default function QuoteCard({ quote, onNew, onShare }: Props) {
   }, [quote]);
 
   const isTyping = displayed.length < quote.text.length;
+
+  const handlePlayAudio = () => {
+    if (isPlaying) {
+      stopSpeech();
+      setIsPlaying(false);
+    } else {
+      speakQuote(quote.text, quote.author.name);
+      setIsPlaying(true);
+    }
+  };
 
   return (
     <div className="w-full max-w-2xl anim-card">
@@ -214,6 +228,38 @@ export default function QuoteCard({ quote, onNew, onShare }: Props) {
         >
           <Copy size={14} strokeWidth={1.8} />
           <span>Copy</span>
+        </button>
+
+        {/* Audio Play/Stop */}
+        <button
+          onClick={handlePlayAudio}
+          className={`flex-[0.45] font-semibold py-4 px-6 rounded-xl text-base transition-all duration-300 hover:scale-[1.04] active:scale-[0.96] flex items-center justify-center gap-2 ${
+            isPlaying
+              ? "text-white bg-red-500/30 border border-red-500/50"
+              : "text-white/60 hover:text-white"
+          }`}
+          style={{
+            background: isPlaying ? "rgba(239,68,68,0.3)" : "rgba(255,255,255,0.03)",
+            border: isPlaying ? "1px solid rgba(239,68,68,0.5)" : "1px solid rgba(255,255,255,0.08)",
+          }}
+          onMouseEnter={(e) => {
+            if (!isPlaying) e.currentTarget.style.borderColor = "rgba(255,0,0,0.35)";
+          }}
+          onMouseLeave={(e) => {
+            if (!isPlaying) e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+          }}
+        >
+          {isPlaying ? (
+            <>
+              <Square size={14} strokeWidth={1.8} fill="currentColor" />
+              <span>Stop</span>
+            </>
+          ) : (
+            <>
+              <Volume2 size={14} strokeWidth={1.8} />
+              <span>Listen</span>
+            </>
+          )}
         </button>
       </div>
     </div>
