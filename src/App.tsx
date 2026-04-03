@@ -221,11 +221,6 @@ export default function App() {
               onShare={handleShare}
               audioEnabled={audioEnabled}
             />
-
-            {/* Meta line */}
-            <p className="text-white/10 text-xs tracking-widest uppercase">
-              {quote.category} · #{quote.id} of {501}
-            </p>
           </div>
         )}
 
